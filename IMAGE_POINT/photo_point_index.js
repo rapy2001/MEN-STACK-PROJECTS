@@ -105,7 +105,8 @@ app.post("/user/register",function(req,res){
                                     followers:[],
                                     following:[],
                                     notifications:[],
-                                    collections:[]
+                                    collections:[],
+                                    totalViews:0
                                 })
                                 .then((user)=>{
                                     if(files.user_image.name !== "")
@@ -424,20 +425,31 @@ app.get("/photo/:id/show",function(req,res){
                                 }
                             }
                         }
-                        let newPhoto = {
-                            id:photo._id,
-                            title:photo.title,
-                            url:photo.url,
-                            descritpion:photo.description,
-                            likes:photo.likes.length,
-                            views:photo.views,
-                            userDetails:photo.userDetails,
-                            like:like,
-                            follow:follow,
-                            collecton:collection
-                        }
-                        res.render("photoShow",{photo:newPhoto});
-                        
+                        user.totalViews += photo.views;
+                        user.save(function(err){
+                            if(err)
+                            {
+                                console.log("Error while saving the user for updated numberof views");
+                                req.session.msg = messages.serverError;
+                                res.redirect("back");
+                            }
+                            else
+                            {
+                                let newPhoto = {
+                                    id:photo._id,
+                                    title:photo.title,
+                                    url:photo.url,
+                                    descritpion:photo.description,
+                                    likes:photo.likes.length,
+                                    views:photo.views,
+                                    userDetails:photo.userDetails,
+                                    like:like,
+                                    follow:follow,
+                                    collecton:collection
+                                }
+                                res.render("photoShow",{photo:newPhoto});
+                            }
+                        })
                         
                     })
                     .catch((err)=>{
@@ -670,8 +682,75 @@ app.get("/photo/:id/collection",function(req,res){
 });
 
 app.get("/user/:id/public",function(req,res){
+    User.findById(req.params.id)
+    .then((user)=>{
+        let photos = [];
+        if(user.photo.length > 0)
+        {
+            for(let i = 0; i<user.photos.length; i++)
+            {
+                Photo.findById(user.photos[i])
+                .then((photo)=>{
+                    photos.push({
+                        id:photo._id,
+                        title:photo.title,
+                        url:photo.url,
+                        likes:photo.likes,
+                        views:photo.views
+                    });
+                })
+                .catch((err)=>{
+                    console.log("Error while getting a user photo");
+                    req.session.msg = messages.serverError;
+                    res.redirect("back");
+                })
+            }
+        }
+        else
+        {
+            photos = false;
+        }
+        userDetails = {
+            username:user.username,
+            image:user.image,
+            description:user.description,
+            photos:photos,
+            totalViews:user.totalViews
+        }
+        res.render("userPublic",{data:userDetails})
+        
+    })
+    .catch((err)=>{
+        console.log("Error while finding the user while displaying the public profile");
+        req.session.msg = messages.serverError;
+        res.redirect("back");
+    });
+});
 
-})
+app.get("/leaderboard",function(req,res){
+    User.find({})
+    .then((users)=>{
+        users.sort(function(a, b){return b.totalViews- a.totalViews});
+        let newUsers = users.map((user)=>{
+            return(
+                {
+                    id:user._id,
+                    username:user.username,
+                    description:user.description,
+                    image:user.image,
+                    totalViews:user.totalViews
+                }
+            )
+        })
+        res.render("leaderboard",{users:newUsers});
+    })
+    .catch((err)=>{
+        console.log("Error while getting the users while showing the leaderboard");
+        req.session.msg = messages.serverError;
+        res.redirect("back");
+    })
+});
+
 app.use(function(req,res,next){
     res.status(404).render("error");
 });

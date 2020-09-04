@@ -16,7 +16,8 @@ const userSchema = new mongoose.Schema({
             userId:mongoose.Schema.Types.ObjectId
         }
     }],
-    collections:[mongoose.Schema.Types.ObjectId]
+    collections:[mongoose.Schema.Types.ObjectId],
+    totalViews:Number
 });
 
 module.exports = mongoose.model("user",userSchema);

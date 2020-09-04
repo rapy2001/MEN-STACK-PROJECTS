@@ -1,0 +1,25 @@
+<div>
+    <div>
+        <div>
+            <img src = "{{data.image}}" alt = "error" />
+        </div>
+        <div>
+            <h1>{{data.username}}</h1>
+            <h4>Photos {{data.photos}}</h4>
+            <h4>followers:{{data.followers}}</h4>
+            <h4>followers:{{data.totalViews}}</h4>
+            <div>
+                {{#each data.photos}}
+                    <div>
+                        <img src = "{{url}}" alt = "error" />
+                        <h4>title: {{title}}</h4>
+                        <h4>likes: {{likes}}</h4>
+                        <h4>views: {{view}}</h4>
+                        <a href = "/photo/{{id}}/show">View Image</a>
+                    </div>
+                {{/each}}
+            </div>
+            
+        </div>
+    </div>
+</div>

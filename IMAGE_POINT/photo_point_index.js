@@ -160,16 +160,14 @@ app.post("/user/login",function(req,res){
     User.find({username:req.body.username},function(err,users){
         if(err)
         {
-            req.session.msg = {
-                type:false,
-                text:"Username does not exists. Please Register"
-            }
-            res.redirect(303,"/user/register");
+            req.session.msg = messages.serverError;
+            res.redirect("/user/login");
         }
         else
         {
-            // console.log(user);
-            if(bcrypt.compareSync(req.body.password,users[0].password))
+            if(users.length > 0)
+            {
+                if(bcrypt.compareSync(req.body.password,users[0].password))
                 {
                     req.session.isLoggedIn = true;
                     req.session.crntUser = {
@@ -190,6 +188,17 @@ app.post("/user/login",function(req,res){
                     }
                     res.redirect(303,"/user/login");
                 }
+            }
+            else
+            {
+                req.session.msg = {
+                    type:false,
+                    text:"Username does not exists. Please Register"
+                }
+                res.redirect(303,"/user/register");
+            }
+            // console.log(user);
+            
         }
     })
 });
@@ -249,7 +258,8 @@ app.post("/photos/create",check,function(req,res){
                             userDetails:{
                                 username:user.username,
                                 user_id:user._id
-                            }
+                            },
+                            comments:[]
                         },function(err,photo){
                             if(err)
                             {
@@ -435,19 +445,56 @@ app.get("/photo/:id/show",function(req,res){
                             }
                             else
                             {
-                                let newPhoto = {
-                                    id:photo._id,
-                                    title:photo.title,
-                                    url:photo.url,
-                                    descritpion:photo.description,
-                                    likes:photo.likes.length,
-                                    views:photo.views,
-                                    userDetails:photo.userDetails,
-                                    like:like,
-                                    follow:follow,
-                                    collecton:collection
+                                let comments = [];
+                                if(photo.comments.length > 0)
+                                {
+                                    for(let i = 0; i<photo.comments.length; i++)
+                                    {
+                                        Comment.findById(photo.comments[i])
+                                        .then((comment)=>{
+                                            comments.push(comment);
+                                            console.log("working");
+                                        })
+                                        .catch((err)=>{
+                                            console.log("Error while finding the comment");
+                                            req.session.msg = messages.serverError;
+                                            res.redirect("back");
+                                        })
+                                    }
+                                    comments = (comments.length > 0) ? comments:false;
+                                    let newPhoto = {
+                                        id:photo._id,
+                                        title:photo.title,
+                                        url:photo.url,
+                                        descritpion:photo.description,
+                                        likes:photo.likes.length,
+                                        views:photo.views,
+                                        userDetails:photo.userDetails,
+                                        like:like,
+                                        follow:follow,
+                                        collecton:collection,
+                                        comments:comments
+                                    }
+                                    res.render("photoShow",{photo:newPhoto});
                                 }
+                                else
+                                {
+                                    let newPhoto = {
+                                        id:photo._id,
+                                        title:photo.title,
+                                        url:photo.url,
+                                        descritpion:photo.description,
+                                        likes:photo.likes.length,
+                                        views:photo.views,
+                                        userDetails:photo.userDetails,
+                                        like:like,
+                                        follow:follow,
+                                        collecton:collection,
+                                        comments:false
+                                    }
                                 res.render("photoShow",{photo:newPhoto});
+                                }
+                                
                             }
                         })
                         
@@ -679,15 +726,19 @@ app.get("/photo/:id/collection",function(req,res){
 });
 
 app.get("/user/:id/public",function(req,res){
+    // console.log(req.params.id);
     User.findById(req.params.id)
     .then((user)=>{
+        // console.log(user);
         let photos = [];
-        if(user.photo.length > 0)
+        if(user.photos.length > 0)
         {
-            for(let i = 0; i<user.photos.length; i++)
+            let i = 0;
+            for( i = 0; i<user.photos.length; i++)
             {
                 Photo.findById(user.photos[i])
                 .then((photo)=>{
+                    // console.log("working");
                     photos.push({
                         id:photo._id,
                         title:photo.title,
@@ -702,19 +753,31 @@ app.get("/user/:id/public",function(req,res){
                     res.redirect("back");
                 })
             }
+            if(i > user.photos.length)
+            {
+                userDetails = {
+                    username:user.username,
+                    image:user.image,
+                    description:user.description,
+                    photos:photos,
+                    totalViews:user.totalViews
+                }
+                res.render("userPublic",{data:userDetails})
+            }
         }
         else
         {
             photos = false;
+            userDetails = {
+                username:user.username,
+                image:user.image,
+                description:user.description,
+                photos:photos,
+                totalViews:user.totalViews
+            }
+            res.render("userPublic",{data:userDetails})
         }
-        userDetails = {
-            username:user.username,
-            image:user.image,
-            description:user.description,
-            photos:photos,
-            totalViews:user.totalViews
-        }
-        res.render("userPublic",{data:userDetails})
+        
         
     })
     .catch((err)=>{

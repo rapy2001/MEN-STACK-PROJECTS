@@ -1,0 +1,19 @@
+<div>
+    <div>
+        <img src = "{{photo.url}}" alt = "error"/>
+        <h3>{{title}}</h3>
+        <h4>By {{photo.userDetails.username}}</h4>
+        
+        <p>
+            {{photo.description}}
+        </p>
+        <h4>views: {{photo.views}}</h4>
+        <h4>likes: {{photo.likes}}</h4>
+        {{#if isLoggedIn}}
+            <a href = "/user/{{photo.userDetails.user_id}}/follow">Follow</a>
+            {{#if photo.like}}
+                <a href = "/photo/{{photo.id}}/like">Like Photo</a>
+            {{/if}}
+        {{/if}}
+    </div>
+</div>

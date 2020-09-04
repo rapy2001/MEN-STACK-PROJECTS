@@ -1,0 +1,22 @@
+<div>
+    <div>
+        <div>
+            <img src = "{{data.image}}" alt = "error" />
+        </div>
+        <div>
+            <h1>{{data.username}}</h1>
+            <h4>Photos {{data.photos}}</h4>
+            <h4>{{data.followers}}</h4>
+            <div>
+                {{#each data.notifications}}
+                    {{#if notifType}}
+                        <h4>Place holder</h4>
+                    {{else}}
+                        <a href = "/notifications/{{_id}}">{{userDetails.username}} posted a photo</a>
+                    {{/if}}
+                {{/each}}
+            </div>
+            
+        </div>
+    </div>
+</div>

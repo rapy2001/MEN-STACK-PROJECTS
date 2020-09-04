@@ -1,0 +1,36 @@
+<DOCTYPE html>
+<html>
+    <head>
+        <title>Photo Point</title>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <a href = "/">Photo Point</a>
+            </div>
+            <div>
+                <a href = "/user/register">Register</a>
+                {{#if isLoggedIn}}
+                    <a href = "/photos/create">Aadd a Photo</a>
+                    <a href = "/user/logout">Logout</a>
+                    <a href = "/user/{{crntUser.ID}}/dashboard">Dashboard</a>
+                {{else}}
+                    <a href = "/user/login">Log In</a>
+                {{/if}}
+                <a href = "/photos/show">All Photos</a>
+            </div>
+        </nav>
+        {{#if msg }}
+            {{#if msg.type}}
+                <h4 class = "success">{{msg.text}}</h4>
+                
+            {{else}}
+            <h4 class = "error">{{msg.text}}</h4>
+            {{/if}}
+        {{/if}}
+        {{{body}}}
+        <footer>
+            <h4>&copy; 2020. Rajarshi Saha</h4>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,16 @@
+<div>
+    {{#if photos.length}}
+        <h2>All Photos</h2>
+        {{#each photos}}
+            <div>
+                <img src = "{{url}}" alt = "error"/>
+                <h3>{{title}}</h3>
+                <h4>By {{userDetails.username}}</h4>
+                <a href = "/photo/{{id}}/show">View</a>
+            </div>
+        {{/each}}
+    {{else}}
+        <h1>No Photos Yet ...</h1>
+    {{/if}}
+    
+</div>

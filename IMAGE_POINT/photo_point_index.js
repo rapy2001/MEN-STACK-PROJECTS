@@ -101,9 +101,11 @@ app.post("/user/register",function(req,res){
                                     username:fields.username,
                                     password:hash,
                                     image:"",
+                                    description:fields.description,
                                     followers:[],
                                     following:[],
-                                    notifications:[]
+                                    notifications:[],
+                                    collections:[]
                                 })
                                 .then((user)=>{
                                     if(files.user_image.name !== "")
@@ -396,18 +398,54 @@ app.get("/photo/:id/show",function(req,res){
                     }
                     if(val == -1)
                         like = false;
+                    let follow = true;
+                    let collection = true;
+                    User.findById(photo.userDetails.user_id)
+                    .then((user)=>{
+                        if(user.followers.length > 0)
+                        {
+                            for(let i = 0; i<user.followers.length; i++)
+                            {
+                                if(String(req.session.crntUser.ID) === String(user.followers[i]))
+                                {
+                                    follow = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if(user.collections.length > 0)
+                        {
+                            for(let i = 0; i<user.collections.length; i++)
+                            {
+                                if(String(photo._id) === String(user.collections[i]))
+                                {
+                                    follow = false;
+                                    break;
+                                }
+                            }
+                        }
+                        let newPhoto = {
+                            id:photo._id,
+                            title:photo.title,
+                            url:photo.url,
+                            descritpion:photo.description,
+                            likes:photo.likes.length,
+                            views:photo.views,
+                            userDetails:photo.userDetails,
+                            like:like,
+                            follow:follow,
+                            collecton:collection
+                        }
+                        res.render("photoShow",{photo:newPhoto});
+                        
+                        
+                    })
+                    .catch((err)=>{
+                        console.log("Error while getting the user during photo show");
+                        req.session.msg = messages.serverError;
+                        res.redirect("back");
+                    })
                 }
-                let newPhoto = {
-                    id:photo._id,
-                    title:photo.title,
-                    url:photo.url,
-                    descritpion:photo.description,
-                    likes:photo.likes.length,
-                    views:photo.views,
-                    userDetails:photo.userDetails,
-                    like:like
-                }
-                res.render("photoShow",{photo:newPhoto});
                }
            })
        }
@@ -416,34 +454,42 @@ app.get("/photo/:id/show",function(req,res){
 
 
 app.get("/photo/:id/like",check,function(req,res){
-    Photo.findById(req.params.id,function(err,photo){
-        if(err)
-        {
-            console.log("Error while finding the photo for adding the like");
-            req.session.msg = messages.serverError;
-            res.redirect("/photo/"+req.params.id+"/show");
-        }
-        else
-        {
-            photo.likes.push(req.session.crntUser.ID);
-            photo.save(function(err){
-                if(err)
-                {
-                    console.log("Error while adding the like to the photo");
-                    req.session.msg = messages.serverError;
-                    res.redirect("/photo/"+req.params.id+"/show");
-                }
-                else
-                {  
-                    req.session.msg = {
-                        type:true,
-                        text:"Like added successfully"
+    if(req.session.isLoggedIn)
+    {
+        Photo.findById(req.params.id,function(err,photo){
+            if(err)
+            {
+                console.log("Error while finding the photo for adding the like");
+                req.session.msg = messages.serverError;
+                res.redirect("/photo/"+req.params.id+"/show");
+            }
+            else
+            {
+                photo.likes.push(req.session.crntUser.ID);
+                photo.save(function(err){
+                    if(err)
+                    {
+                        console.log("Error while adding the like to the photo");
+                        req.session.msg = messages.serverError;
+                        res.redirect("/photo/"+req.params.id+"/show");
                     }
-                    res.redirect("/photo/"+req.params.id+"/show");
-                }
-            })
-        }
-    });
+                    else
+                    {  
+                        req.session.msg = {
+                            type:true,
+                            text:"Like added successfully"
+                        }
+                        res.redirect("/photo/"+req.params.id+"/show");
+                    }
+                })
+            }
+        });
+    }
+    else
+    {
+        req.session.msg = messages.logErr;
+        res.redirect("back");
+    }
 });
 app.get("/user/:id/dashboard",check,dash,function(req,res){
     User.findById(req.params.id,function(err,user){
@@ -490,54 +536,63 @@ app.get("/user/:id/dashboard",check,dash,function(req,res){
 });
 
 app.get("/user/:id/follow",check,function(req,res){
-    User.findById(req.params.id,function(err,user){
-        if(err)
-        {
-            console.log("Error while finding the user for following");
-            req.session.msg = messages.serverError;
-            res.redirect("back");
-        }
-        else
-        {
-            user.followers.push(req.session.crntUser.ID);
-            user.save(function(err,user){
-                if(err)
-                {
-                    console.log("Error while saving the user for following");
-                    req.session.msg = messages.serverError;
-                    res.redirect("back");
-                }
-                else
-                {
-                    User.findById(req.session.crntUser.ID)
-                    .then((user)=>{
-                        user.following.push(req.params.id);
-                        user.save(function(err){
-                            if(err)
-                            {
-                                console.log("Error while saving the user who is following");
-                                req.session.msg = messages.serverError;
-                                res.redirect("back");
-                            }
-                            else
-                            {
-                                req.session.msg = {
-                                    type:true,
-                                    text:"Now following"
-                                }
-                                res.redirect("back");
-                            }
-                        })
-                    })
-                    .catch((err)=>{
-                        console.log("Error while finding  the user who is going to follow");
+    if(req.session.isLoggedIn)
+    {
+        User.findById(req.params.id,function(err,user){
+            if(err)
+            {
+                console.log("Error while finding the user for following");
+                req.session.msg = messages.serverError;
+                res.redirect("back");
+            }
+            else
+            {
+                user.followers.push(req.session.crntUser.ID);
+                user.save(function(err,user){
+                    if(err)
+                    {
+                        console.log("Error while saving the user for following");
                         req.session.msg = messages.serverError;
                         res.redirect("back");
-                    })
-                }
-            })
-        }
-    });
+                    }
+                    else
+                    {
+                        User.findById(req.session.crntUser.ID)
+                        .then((user)=>{
+                            user.following.push(req.params.id);
+                            user.save(function(err){
+                                if(err)
+                                {
+                                    console.log("Error while saving the user who is following");
+                                    req.session.msg = messages.serverError;
+                                    res.redirect("back");
+                                }
+                                else
+                                {
+                                    req.session.msg = {
+                                        type:true,
+                                        text:"Now following"
+                                    }
+                                    res.redirect("back");
+                                }
+                            })
+                        })
+                        .catch((err)=>{
+                            console.log("Error while finding  the user who is going to follow");
+                            req.session.msg = messages.serverError;
+                            res.redirect("back");
+                        })
+                    }
+                })
+            }
+        });
+    }
+    else
+    {
+        req.session.msg = messages.logErr;
+        res.redirect("back");
+    }
+    
 });
 
 
@@ -576,6 +631,46 @@ app.get("/notifications/:id",check,function(req,res){
             }
         }
     })
+})
+
+app.get("/photo/:id/collection",function(req,res){
+    if(req.session.isLoggedIn)
+    {
+        User.findById(req.session.crntUser.ID)
+        .then((user)=>{
+            user.collections.push(req.params.id);
+            user.save(function(err,user){
+                if(err)
+                {
+                    console.log("error while saving the user with the new collection");
+                    req.session.msg = messages.serverError;
+                    res.redirect("back");
+                }
+                else
+                {
+                    req.session.msg = {
+                        type:false,
+                        text:"Added to collection successfully"
+                    }
+                    res.redirect("back");
+                }
+            })
+        })
+        .catch((err)=>{
+            console.log("Error while getting the user during adding the image to the collection");
+            req.session.msg = messages.serverError;
+            res.redirect("back");
+        })
+    }
+    else
+    {
+        req.session.msg = messages.logErr;
+        res.redirect("back");
+    }
+});
+
+app.get("/user/:id/public",function(req,res){
+
 })
 app.use(function(req,res,next){
     res.status(404).render("error");

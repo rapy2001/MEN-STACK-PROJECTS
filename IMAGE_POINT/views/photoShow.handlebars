@@ -9,11 +9,12 @@
         </p>
         <h4>views: {{photo.views}}</h4>
         <h4>likes: {{photo.likes}}</h4>
-        {{#if isLoggedIn}}
+        {{#if photo.follow}}
             <a href = "/user/{{photo.userDetails.user_id}}/follow">Follow</a>
-            {{#if photo.like}}
-                <a href = "/photo/{{photo.id}}/like">Like Photo</a>
-            {{/if}}
         {{/if}}
+        {{#if photo.like}}
+            <a href = "/photo/{{photo.id}}/like">Like Photo</a>
+        {{/if}}
+        <a href = "/photo/{{photo.id}}/collection">Add to Collection</a>
     </div>
 </div>

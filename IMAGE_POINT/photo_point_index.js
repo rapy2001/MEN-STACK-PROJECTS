@@ -21,6 +21,7 @@ const formidable = require("formidable");
 //routes
 const User = require("./models/User");
 const Photo = require("./models/Photo");
+const Comment = require("./models/Comment");
 const bodyparser = require("body-parser");
 const seed = require("./seed/seed");
 seed();
@@ -276,7 +277,6 @@ app.post("/photos/create",check,function(req,res){
                                                 else
                                                 {
                                                     follower.notifications.push({
-                                                        notificatonId:Number(Date.now()),
                                                         id:photo._id,
                                                         viewed:false,
                                                         notifType:false,
@@ -632,10 +632,7 @@ app.get("/notifications/:id",check,function(req,res){
                         }
                         else
                         {
-                            if(user.notifications[i].notifType === false)
-                            {
-                                res.redirect("/photo/" + user.notifications[i].id +"/show");
-                            }
+                            res.redirect("/photo/" + user.notifications[i].id +"/show");
                         }
                     })
                     break;
@@ -731,14 +728,15 @@ app.get("/leaderboard",function(req,res){
     User.find({})
     .then((users)=>{
         users.sort(function(a, b){return b.totalViews- a.totalViews});
-        let newUsers = users.map((user)=>{
+        let newUsers = users.map((user,ind)=>{
             return(
                 {
                     id:user._id,
                     username:user.username,
                     description:user.description,
                     image:user.image,
-                    totalViews:user.totalViews
+                    totalViews:user.totalViews,
+                    rank:ind + 1
                 }
             )
         })
@@ -749,6 +747,81 @@ app.get("/leaderboard",function(req,res){
         req.session.msg = messages.serverError;
         res.redirect("back");
     })
+});
+
+app.get("/photo/:id/comment",check,function(req,res){
+    res.render("commentCreate",{photoId:req.params.id});
+});
+
+
+app.post("/photo/:id/comment",check,function(req,res){
+    Comment.create({
+        comment:req.body.comment,
+        userDetails:{
+            username:req.session.crntUser.username,
+            userId:req.session.crntUser.ID
+        }
+    },function(err,comment){
+        if(err)
+        {
+            console.log("Error while adding the comment");
+            req.session.msg = messages.serverError;
+            res.redirect("back");
+        }
+        else
+        {
+            Photo.findById(req.params.id)
+            .then((photo)=>{
+                photo.comments.push(comment._id);
+                photo.save(function(err){
+                    if(err)
+                    {
+                        console.log("Error while saving the photo for saving the comment");
+                        req.session.msg = messages.serverError;
+                        res.redirect("back");
+                    }
+                    else
+                    {
+                        User.findById(photo.userDetails.user_id)
+                        .then((user)=>{
+                            user.notifications.push({
+                                id:photo._id,
+                                viewed:false,
+                                notifType:true,
+                                userDetails:{
+                                    username:user.username,
+                                    userId:user._id
+                                }
+                            });
+                            user.save(function(err){
+                                if(err)
+                                {
+                                    console.log("Error while giving the notifications about the comment to the user");
+                                    req.session.msg = messages.serverError;
+                                    res.redirect("/");
+                                }
+                            });
+                        })
+                        .catch((err)=>{
+                            console.log("Error while finding the user for giving notification about the new comment");
+                            req.session.msg = messages.serverError;
+                            res.redirect("back");
+                        })
+                        req.session.msg = {
+                            type:true,
+                            text:"comment added successfully"
+                        }
+                        res.redirect("/photo/"+req.params.id+"/show");
+                    }
+                })
+            })
+            .catch((err)=>{
+                console.log("Error while finding the photo for saving the comment");
+                req.session.msg = messages.serverError;
+                res.redirect("back");
+            })
+        }
+    });
 });
 
 app.use(function(req,res,next){

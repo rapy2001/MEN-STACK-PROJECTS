@@ -10,7 +10,7 @@
             <div>
                 {{#each data.notifications}}
                     {{#if notifType}}
-                        <h4>Place holder</h4>
+                        <a href = "/notifications/{{_id}}">{{userDetails.username}} posted commented on one of your photos</a>
                     {{else}}
                         <a href = "/notifications/{{_id}}">{{userDetails.username}} posted a photo</a>
                     {{/if}}

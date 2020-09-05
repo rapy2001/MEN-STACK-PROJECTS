@@ -9,7 +9,8 @@ const photoSchema = new mongoose.Schema({
     userDetails:{
         username:String,
         user_id:mongoose.Schema.Types.ObjectId
-    }
+    },
+    comments:[mongoose.Schema.Types.ObjectId]
 });
 
 module.exports = mongoose.model("Photo",photoSchema);

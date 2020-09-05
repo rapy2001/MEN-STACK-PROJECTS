@@ -611,7 +611,8 @@ app.get("/user/:id/dashboard",check,dash,function(req,res){
                         image:user.image,
                         photos:user.photos.length,
                         followers:user.followers.length,
-                        notifications:user.notifications
+                        notifications:user.notifications,
+                        collections:user.collections.length
                     }
                     res.render("dashboard",{data:data});
                 }
@@ -624,54 +625,83 @@ app.get("/user/:id/dashboard",check,dash,function(req,res){
 app.get("/user/:id/follow",check,function(req,res){
     if(req.session.isLoggedIn)
     {
-        User.findById(req.params.id,function(err,user){
-            if(err)
-            {
-                console.log("Error while finding the user for following");
-                req.session.msg = messages.serverError;
-                res.redirect("back");
+        if(String(req.session.crntUser.ID) === String(req.params.id))
+        {
+            req.session.msg = {
+                type:false,
+                text:"You can't follow yourself"
             }
-            else
-            {
-                user.followers.push(req.session.crntUser.ID);
-                user.save(function(err,user){
-                    if(err)
+            res.redirect("back");
+        }
+        else
+        {
+            User.findById(req.params.id,function(err,user){
+                if(err)
+                {
+                    console.log("Error while finding the user for following");
+                    req.session.msg = messages.serverError;
+                    res.redirect("back");
+                }
+                else
+                {
+                    let flg = 0;
+                    for(let i = 0; i<user.followers.length; i++)
                     {
-                        console.log("Error while saving the user for following");
-                        req.session.msg = messages.serverError;
-                        res.redirect("back");
+                        if(String(user.followers[i]) === String(req.params.id))
+                        {
+                            req.session.msg = {
+                                type:false,
+                                text:"You are already a follower"
+                            }
+                            res.redirect("back");
+                            flg = 1;
+                            break;
+                        }
                     }
-                    else
+                    if(flg === 0)
                     {
-                        User.findById(req.session.crntUser.ID)
-                        .then((user)=>{
-                            user.following.push(req.params.id);
-                            user.save(function(err){
-                                if(err)
-                                {
-                                    console.log("Error while saving the user who is following");
+                        user.followers.push(req.session.crntUser.ID);
+                        user.save(function(err,user){
+                            if(err)
+                            {
+                                console.log("Error while saving the user for following");
+                                req.session.msg = messages.serverError;
+                                res.redirect("back");
+                            }
+                            else
+                            {
+                                User.findById(req.session.crntUser.ID)
+                                .then((user)=>{
+                                    user.following.push(req.params.id);
+                                    user.save(function(err){
+                                        if(err)
+                                        {
+                                            console.log("Error while saving the user who is following");
+                                            req.session.msg = messages.serverError;
+                                            res.redirect("back");
+                                        }
+                                        else
+                                        {
+                                            req.session.msg = {
+                                                type:true,
+                                                text:"Now following"
+                                            }
+                                            res.redirect("back");
+                                        }
+                                    })
+                                })
+                                .catch((err)=>{
+                                    console.log("Error while finding  the user who is going to follow");
                                     req.session.msg = messages.serverError;
                                     res.redirect("back");
-                                }
-                                else
-                                {
-                                    req.session.msg = {
-                                        type:true,
-                                        text:"Now following"
-                                    }
-                                    res.redirect("back");
-                                }
-                            })
+                                })
+                            }
                         })
-                        .catch((err)=>{
-                            console.log("Error while finding  the user who is going to follow");
-                            req.session.msg = messages.serverError;
-                            res.redirect("back");
-                        })
-                    }
-                })
-            }
-        });
+                    }                    
+                }
+            });
+        }
+        
     }
     else
     {
@@ -721,23 +751,145 @@ app.get("/photo/:id/collection",function(req,res){
     {
         User.findById(req.session.crntUser.ID)
         .then((user)=>{
-            user.collections.push(req.params.id);
-            user.save(function(err,user){
-                if(err)
+            if(user.photos.length > 0)
+            {
+                let test = 0;
+                for(let i = 0; i<user.photos.length; i++)
                 {
-                    console.log("error while saving the user with the new collection");
-                    req.session.msg = messages.serverError;
-                    res.redirect("back");
+                    if(String(user.photos[i]) === String(req.params.id))
+                    {
+                        req.session.msg = {
+                            type:false,
+                            text:"You can't add your own photo to your collection"
+                        }
+                        res.redirect("back");
+                        test = 1;
+                        break;
+                    }
+                }
+                if(test === 0)
+                {
+                    if(user.collections.length > 0)
+                    {
+                        let flg = 0;
+                        for(let i = 0; i<user.collections.length; i++)
+                        {
+                            if(String(user.collections[i])===String(req.params.id))
+                            {
+                                req.session.msg = {
+                                    type:false,
+                                    text:"The photo is already in your collection"
+                                }
+                                flg = 1;
+                                res.redirect("back");
+                                break;
+                            }
+                        }
+                        if(flg === 0)
+                        {
+                            user.collections.push(req.params.id);
+                            user.save(function(err,user){
+                                if(err)
+                                {
+                                    console.log("error while saving the user with the new collection");
+                                    req.session.msg = messages.serverError;
+                                    res.redirect("back");
+                                }
+                                else
+                                {
+                                    req.session.msg = {
+                                        type:false,
+                                        text:"Added to collection successfully"
+                                    }
+                                    res.redirect("back");
+                                }
+                            })
+                        }
+                    }
+                    else
+                    {
+                        user.collections.push(req.params.id);
+                        user.save(function(err,user){
+                            if(err)
+                            {
+                                console.log("error while saving the user with the new collection");
+                                req.session.msg = messages.serverError;
+                                res.redirect("back");
+                            }
+                            else
+                            {
+                                req.session.msg = {
+                                    type:false,
+                                    text:"Added to collection successfully"
+                                }
+                                res.redirect("back");
+                            }
+                        })
+                    }
+                }
+            }
+            else
+            {
+                if(user.collections.length > 0)
+                {
+                    let flg = 0;
+                    for(let i = 0; i<user.collections.length; i++)
+                    {
+                        if(String(user.collections[i])===String(req.params.id))
+                        {
+                            req.session.msg = {
+                                type:false,
+                                text:"The photo is already in your collection"
+                            }
+                            flg = 1;
+                            res.redirect("back");
+                            break;
+                        }
+                    }
+                    if(flg === 0)
+                    {
+                        user.collections.push(req.params.id);
+                        user.save(function(err,user){
+                            if(err)
+                            {
+                                console.log("error while saving the user with the new collection");
+                                req.session.msg = messages.serverError;
+                                res.redirect("back");
+                            }
+                            else
+                            {
+                                req.session.msg = {
+                                    type:false,
+                                    text:"Added to collection successfully"
+                                }
+                                res.redirect("back");
+                            }
+                        })
+                    }
                 }
                 else
                 {
-                    req.session.msg = {
-                        type:false,
-                        text:"Added to collection successfully"
-                    }
-                    res.redirect("back");
+                    user.collections.push(req.params.id);
+                    user.save(function(err,user){
+                        if(err)
+                        {
+                            console.log("error while saving the user with the new collection");
+                            req.session.msg = messages.serverError;
+                            res.redirect("back");
+                        }
+                        else
+                        {
+                            req.session.msg = {
+                                type:false,
+                                text:"Added to collection successfully"
+                            }
+                            res.redirect("back");
+                        }
+                    })
                 }
-            })
+                
+            }
+            
         })
         .catch((err)=>{
             console.log("Error while getting the user during adding the image to the collection");

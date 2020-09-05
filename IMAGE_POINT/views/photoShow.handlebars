@@ -19,16 +19,17 @@
             <h3>Comments</h3>
             <a href = "/photo/{{photo.id}}/comment">Add a Comment</a>
             {{#if photo.comments}}
-                <div>
-                    <h4>No Comments yet ...</h4>
-                </div>
-            {{else}} 
                 {{#each photo.comments}}
                     <div>
                         <h4>{{comment}}</h4>
                         <h5>By: {{userDetails.username}}</h5>
                     </div>
                 {{/each}}
+            {{else}} 
+                
+                <div>
+                    <h4>No Comments yet ...</h4>
+                </div>
             {{/if}}
         </div>
     </div>

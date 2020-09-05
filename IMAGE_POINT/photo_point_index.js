@@ -302,6 +302,17 @@ app.post("/photos/create",check,function(req,res){
                                                             req.session.msg = messages.serverError;
                                                             res.redirect("/");
                                                         }
+                                                        else
+                                                        {
+                                                            if(i === user.followers.length - 1 )
+                                                            {
+                                                                req.session.msg = {
+                                                                    type:true,
+                                                                    text:"Photo added successfully"
+                                                                }
+                                                                res.redirect("/");
+                                                            }
+                                                        }
                                                     });
                                                 }
                                             })
@@ -385,6 +396,7 @@ app.get("/photo/:id/show",function(req,res){
        } 
        else
        {
+        //    console.log("2 times execytion");
            photo.views +=1;
            photo.save(function(err,photo){
                if(err)
@@ -437,23 +449,44 @@ app.get("/photo/:id/show",function(req,res){
                         }
                         user.totalViews += photo.views;
                         user.save(function(err){
+                            // console.log("may be 2 times");
                             if(err)
                             {
-                                console.log("Error while saving the user for updated numberof views");
+                                console.log("Error while saving the user for updated number of views");
                                 req.session.msg = messages.serverError;
                                 res.redirect("back");
                             }
                             else
                             {
                                 let comments = [];
+                                // console.log("hello",photo.comments[0]);
                                 if(photo.comments.length > 0)
                                 {
-                                    for(let i = 0; i<photo.comments.length; i++)
+                                    for( let i = 0; i<photo.comments.length; i++)
                                     {
+                                        console.log("hello",photo.comments[0]);
                                         Comment.findById(photo.comments[i])
                                         .then((comment)=>{
                                             comments.push(comment);
-                                            console.log("working");
+                                            console.log(i,photo.comments.length,comments);
+                                            if(i === photo.comments.length - 1)
+                                            {
+                                                console.log("working");
+                                                let newPhoto = {
+                                                    id:photo._id,
+                                                    title:photo.title,
+                                                    url:photo.url,
+                                                    descritpion:photo.description,
+                                                    likes:photo.likes.length,
+                                                    views:photo.views,
+                                                    userDetails:photo.userDetails,
+                                                    like:like,
+                                                    follow:follow,
+                                                    collecton:collection,
+                                                    comments:comments
+                                                }
+                                                res.render("photoShow",{photo:newPhoto});
+                                            }
                                         })
                                         .catch((err)=>{
                                             console.log("Error while finding the comment");
@@ -461,24 +494,10 @@ app.get("/photo/:id/show",function(req,res){
                                             res.redirect("back");
                                         })
                                     }
-                                    comments = (comments.length > 0) ? comments:false;
-                                    let newPhoto = {
-                                        id:photo._id,
-                                        title:photo.title,
-                                        url:photo.url,
-                                        descritpion:photo.description,
-                                        likes:photo.likes.length,
-                                        views:photo.views,
-                                        userDetails:photo.userDetails,
-                                        like:like,
-                                        follow:follow,
-                                        collecton:collection,
-                                        comments:comments
-                                    }
-                                    res.render("photoShow",{photo:newPhoto});
                                 }
                                 else
                                 {
+                                    console.log("present !!!!!!!!");
                                     let newPhoto = {
                                         id:photo._id,
                                         title:photo.title,
@@ -492,7 +511,7 @@ app.get("/photo/:id/show",function(req,res){
                                         collecton:collection,
                                         comments:false
                                     }
-                                res.render("photoShow",{photo:newPhoto});
+                                    res.render("photoShow",{photo:newPhoto});
                                 }
                                 
                             }
@@ -504,6 +523,14 @@ app.get("/photo/:id/show",function(req,res){
                         req.session.msg = messages.serverError;
                         res.redirect("back");
                     })
+                }
+                else
+                {
+                    req.session.msg = {
+                        type:false,
+                        text:"Please login to access the page"
+                    }
+                    res.redirect("back");
                 }
                }
            })
@@ -852,7 +879,7 @@ app.post("/photo/:id/comment",check,function(req,res){
                                 viewed:false,
                                 notifType:true,
                                 userDetails:{
-                                    username:user.username,
+                                    username:req.session.crntUser.username,
                                     userId:user._id
                                 }
                             });
@@ -863,6 +890,15 @@ app.post("/photo/:id/comment",check,function(req,res){
                                     req.session.msg = messages.serverError;
                                     res.redirect("/");
                                 }
+                                else
+                                {
+                                    console.log("multiple times execution");
+                                    req.session.msg = {
+                                        type:true,
+                                        text:"comment added successfully"
+                                    }
+                                    res.redirect("/photo/"+req.params.id+"/show");
+                                }
                             });
                         })
                         .catch((err)=>{
@@ -870,11 +906,6 @@ app.post("/photo/:id/comment",check,function(req,res){
                             req.session.msg = messages.serverError;
                             res.redirect("back");
                         })
-                        req.session.msg = {
-                            type:true,
-                            text:"comment added successfully"
-                        }
-                        res.redirect("/photo/"+req.params.id+"/show");
                     }
                 })
             })

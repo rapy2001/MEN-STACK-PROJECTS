@@ -1,0 +1,169 @@
+*{
+    margin:0px;
+    padding:0px;
+}
+:root{
+    --mainColor:rgb(179, 26, 255);
+    --mainFamily:'Josefin Sans', sans-serif;
+    --transition:.2s all linear;
+    --lightWhite:rgba(255,255,255,.85);
+    --myH:calc(100vh - 110px);
+}
+.nav{
+    /* border:1px solid red; */
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    padding:1rem 2rem;
+    font-family:var(--mainFamily);
+    background-color:var(--mainColor);
+}
+.nav_box_1{
+    border:1px solid transparent;
+}
+a{
+    text-decoration:none;
+    outline:none;
+    font-weight:100;
+}
+.nav_box_1 a{
+    font-size:1.5rem;
+    color:white;
+}
+.nav_box_2{
+    box-sizing: border-box;
+    width:25vw;
+    /* border:1px solid red; */
+    position:fixed;
+    top:0px;
+    right:-470px;
+    background-color:black;
+    display:flex;
+    flex-direction:column;
+    padding:2rem 3rem;
+    padding-top:3.5rem;
+    transition:.5s all linear;
+}
+.nav_box_2 a{
+    font-size:1.2rem;
+    color:var(--lightWhite);
+    margin-top:1rem;
+    margin-top:1rem;
+    transition: var(--transition);
+    
+}
+.nav_box_2 a:hover{
+    cursor:pointer;
+    color:white;
+}
+.nav_cut{
+    display:flex;
+    justify-content: flex-end;
+    /* border:1px solid red; */
+}
+.nav_cut i{
+    font-size:1.2rem;
+    color:white;
+    border:1.5px solid white;
+    padding:1rem;
+    transition: var(--transition);
+}
+.nav_cut i:hover{
+    cursor:pointer;
+    background-color:white;
+    color:black;
+}
+.nav_box_2_slide{
+    right:0px;
+}
+.brgr{
+    border:1px solid transparent;
+}
+.brgr div{
+    box-sizing:border-box;
+    width:1.5rem;
+    height:.2rem;
+    margin-top:.3rem;
+    margin-bottom:.3rem;
+    background-color:var(--lightWhite);
+    transition:.2s all linear;
+}
+.brgr:hover{
+    cursor:pointer
+}
+.brgr:hover div{
+    background-color:white;
+}
+.footer{
+    background-color:var(--mainColor);
+    padding:1rem;
+}
+.footer h4{
+    text-align: center;
+    font-family:var(--mainFamily);
+    font-weight:100;
+    color:white;
+}
+.register{
+    box-sizing: border-box;
+    height:var(--myH);
+    background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)),url("https://static.dribbble.com/users/237483/screenshots/5913908/leica.png");
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.form{
+    box-sizing: border-box;
+    width:35vw;
+    height:70vh;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    background-color:white;
+    font-family:var(--mainFamily);
+    padding:3.5rem 0rem;
+    padding-bottom:2rem;
+    border-radius:.7rem;
+}
+.form h3{
+    font-weight:100;
+    color:var(--mainColor);
+    font-size:1.8rem;
+    text-align:center;
+    margin-bottom:2rem;
+}
+.form input,textarea{
+    box-sizing: border-box;
+    width:20vw;
+    outline:none;
+    font-family:var(--mainFamily);
+    padding:.8rem 1rem;
+    border:1.2px solid var(--mainColor);
+    margin-top:1rem;
+    margin-bottom:1rem;
+}
+.form textarea{
+    height:15vh;
+    margin-bottom:2rem;
+}
+.btn{
+    outline:none;
+    font-family:var(--mainFamily);
+    background-color:transparent;
+    padding:.7rem 2rem;
+    color:var(--mainColor);
+    border:1.5px solid var(--mainColor);
+    transition: var(--transition);
+}
+.btn:hover{
+    cursor:pointer;
+    background-color:var(--mainColor);
+    color:white;
+}
+.form h4{
+    font-weight:100;
+    margin-top:1rem;
+}
+.form a{
+    color:var(--mainColor);
+}

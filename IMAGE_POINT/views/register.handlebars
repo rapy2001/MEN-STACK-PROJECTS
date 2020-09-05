@@ -1,12 +1,13 @@
-<div>
-    <form action = "/user/register" method = "POST" enctype = "multipart/form-data">
-        <input type = "text" placeholder = "User Name" name = "username"/>
-        <input type = "password" placeholder = "Password" name = "password"/>
+<div class = "register">
+    <form action = "/user/register" method = "POST" enctype = "multipart/form-data" class = "form">
+        <h3>Register</h3>
+        <input type = "text" placeholder = "User Name" name = "username" required = "required" autocomplete="off" />
+        <input type = "password" placeholder = "Password" name = "password" required = "required" autocomplete="off"/>
         <input type = "file" name = "user_image" />
-        <textarea placeholder = "Write about yourself" name = "description">
+        <textarea placeholder = "Write about yourself" name = "description" autocomplete="off" >
 
         </textarea>
-        <button type = "submit">Register</button>
-         <a href = "/user/login">Already have an account ? Then Log In !!</a>
+        <button type = "submit" class = "btn">Register</button>
+        <h4> Already have an account ? Then <a href = "/user/login"> Log In !!</a> </h4>
     </form>
 </div>

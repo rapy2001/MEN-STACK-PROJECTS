@@ -2,13 +2,19 @@
 <html>
     <head>
         <title>Photo Point</title>
+        <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel = "stylesheet" type = "text/css" href = "/CSS/style.css"/>
+        <link rel = "icon" type = "image/gif" href ="Favicon/favicon.gif"/>
+        
     </head>
     <body>
-        <nav>
-            <div>
+        <nav class = "nav">
+            <div class = "nav_box_1">
                 <a href = "/">Photo Point</a>
             </div>
-            <div>
+            <div class = "nav_box_2">
+                <h4 class = "nav_cut"><i class = "fa fa-times"></i></h4>
                 <a href = "/user/register">Register</a>
                 <a href = "/leaderboard">Leaderboard</a>
                 {{#if isLoggedIn}}
@@ -20,6 +26,11 @@
                 {{/if}}
                 <a href = "/photos/show">All Photos</a>
             </div>
+            <div class = "brgr">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
         </nav>
         {{#if msg }}
             {{#if msg.type}}
@@ -30,8 +41,7 @@
             {{/if}}
         {{/if}}
         {{{body}}}
-        <footer>
+        <footer class = "footer">
             <h4>&copy; 2020. Rajarshi Saha</h4>
         </footer>
-    </body>
-</html>
+{{> nav }}

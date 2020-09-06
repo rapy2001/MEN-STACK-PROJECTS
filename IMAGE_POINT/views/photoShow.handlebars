@@ -1,36 +1,49 @@
-<div>
-    <div>
-        <img src = "{{photo.url}}" alt = "error"/>
-        <h3>{{title}}</h3>
-        <h4><a href = "/user/{{photo.userDetails.user_id}}/public">By {{photo.userDetails.username}}</a></h4>
-        <p>
-            {{photo.description}}
-        </p>
-        <h4>views: {{photo.views}}</h4>
-        <h4>likes: {{photo.likes}}</h4>
-        {{#if photo.follow}}
-            <a href = "/user/{{photo.userDetails.user_id}}/follow">Follow</a>
-        {{/if}}
-        {{#if photo.like}}
-            <a href = "/photo/{{photo.id}}/like">Like Photo</a>
-        {{/if}}
-        <a href = "/photo/{{photo.id}}/collection">Add to Collection</a>
+<div class = "photo_show">
+    <div class = "photo_show_box_1">
+        <h2><a href = "/user/{{photo.userDetails.user_id}}/public">By <i>{{photo.userDetails.username}}</a></i></h2>
         <div>
-            <h3>Comments</h3>
-            <a href = "/photo/{{photo.id}}/comment">Add a Comment</a>
-            {{#if photo.comments}}
-                {{#each photo.comments}}
-                    <div>
-                        <h4>{{comment}}</h4>
-                        <h5>By: {{userDetails.username}}</h5>
-                    </div>
-                {{/each}}
-            {{else}} 
-                
-                <div>
-                    <h4>No Comments yet ...</h4>
-                </div>
+            {{#if photo.follow}}
+                <h4><a href = "/user/{{photo.userDetails.user_id}}/follow">Follow</a></h4>
             {{/if}}
+            <h4><a href = "/photo/{{photo.id}}/collection">Add to Collection</a></h4>
         </div>
+    </div>
+    <div class = "photo_show_box_2">
+        <div class = "image_general">
+            <div class = "image_box">
+                <img src = "{{photo.url}}" alt = "error"/> 
+            </div>
+            <div class = "photo_lks_vws">
+                <div class = "photo_lks">
+                    {{#if photo.like}}
+                        <h4 ><a href = "/photo/{{photo.id}}/like"><i class = "fa fa-heart like"></i></a></h4>
+                    {{else}}
+                        <h4 ><i class = "fa fa-heart liked"></i></h4>
+                    {{/if}}
+                    <h4>{{photo.likes}}</h4>
+                </div>
+                <h4>views: {{photo.views}}</h4>
+            </div>
+            <h3>{{title}}</h3>
+            <p>
+                {{photo.description}}
+            </p>
+        </div>
+    </div>
+    <div>
+        <h3>Comments</h3>
+        <a href = "/photo/{{photo.id}}/comment">Add a Comment</a>
+        {{#if photo.comments}}
+            {{#each photo.comments}}
+                <div>
+                    <h4>{{comment}}</h4>
+                    <h5>By: {{userDetails.username}}</h5>
+                </div>
+            {{/each}}
+        {{else}}  
+            <div>
+                <h4>No Comments yet ...</h4>
+            </div>
+        {{/if}}
     </div>
 </div>

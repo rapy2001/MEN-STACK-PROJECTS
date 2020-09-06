@@ -107,7 +107,9 @@ a{
 .register{
     box-sizing: border-box;
     height:var(--myH);
-    background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)),url("https://static.dribbble.com/users/237483/screenshots/5913908/leica.png");
+    background:linear-gradient(rgba(0,0,0,.3),rgba(0,0,0,.3)),url("https://static.dribbble.com/users/237483/screenshots/5913908/leica.png");
+    background-position:center center;
+    background-size:cover;
     display:flex;
     justify-content: center;
     align-items: center;
@@ -166,4 +168,61 @@ a{
 }
 .form a{
     color:var(--mainColor);
+}
+.login{
+    box-sizing: border-box;
+    height:var(--myH);
+    background:linear-gradient(rgba(0,0,0,.3),rgba(0,0,0,.3)),url("https://static.dribbble.com/users/1376306/screenshots/6997138/travel.jpg");
+    background-position:center center;
+    background-size:cover;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.login form{
+    height:42vh;
+}
+.success{
+    border:1px solid red;
+    box-sizing: border-box;
+    width:22vw;
+    height:8vh;
+    padding:1rem 2rem;
+    position:fixed;
+    right:0px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    font-family:var(--mainFamily);
+    font-weight:100;
+    font-size:1.2rem;
+    background-color:white;
+    color:var(--mainColor);
+    transition:.5s all linear;
+}
+.scs_check{
+    box-sizing: border-box;
+    width:2.5rem;
+    /* border:1px solid red; */
+    height:2.5rem;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    background-color:#20CC82;
+    color:white;
+    border-radius:50%;
+    margin-right:2rem;
+}
+.msg_cut{
+    /* border:1px solid red; */
+    color:grey;
+    transition: var(--transition);
+}
+.msg_cut:hover{
+    cursor: pointer;
+    color:black;
+}
+.hide{
+    pointer-events: none;
+    right:-23vw;
 }

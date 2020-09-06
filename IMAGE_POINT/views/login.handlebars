@@ -1,8 +1,9 @@
-<div>
-    <form action = "/user/login" method = "POST"> 
-        <input type = "text" placeholder = "User Name" name = "username"/>
-        <input type = "password" placeholder = "Password" name = "password"/>
-        <button type = "submit">Log In</button>
-        <a href = "/user/register">Don't have an account ? Then register now !!</a>
+<div class = "login">
+    <form action = "/user/login" method = "POST" class = "form"> 
+        <h3>Log In</h3>
+        <input type = "text" placeholder = "User Name" name = "username" required= "required" autocomplete = "off" />
+        <input type = "password" placeholder = "Password" name = "password" required= "required" autocomplete = "off" />
+        <button type = "submit" class = "btn">Log In</button>
+        <h4> Don't have an account ? Then <a href = "/user/register"> register now !!</a> </h4>
     </form>
 </div>

@@ -1,14 +1,20 @@
 <div>
-    {{#each users}}
-        <div>
-            <h1>rank: {{rank}} views: {{totalViews}}</h1>
+    {{#if users}}
+        {{#each users}}
             <div>
-                <img src = {{image}} alt = "error"/>
+                <h1>rank: {{rank}} views: {{totalViews}}</h1>
                 <div>
-                    <h2> <a href = "/user/{{id}}/public">{{username}}</a></h2>
-                    <p>{{description}}</p>
+                    <img src = {{image}} alt = "error"/>
+                    <div>
+                        <h2> <a href = "/user/{{id}}/public">{{username}}</a></h2>
+                        <p>{{description}}</p>
+                    </div>
                 </div>
             </div>
+        {{/each}}
+    {{else}}
+        <div>
+            <h1>No Users Yet ....</h1>
         </div>
-    {{/each}}
+    {{/if}}
 </div>

@@ -982,6 +982,8 @@ app.get("/leaderboard",function(req,res){
                 }
             )
         })
+        if(users.length === 0)
+            newUsers = false;
         res.render("leaderboard",{users:newUsers});
     })
     .catch((err)=>{

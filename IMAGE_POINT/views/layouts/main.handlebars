@@ -5,8 +5,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel = "stylesheet" type = "text/css" href = "/CSS/style.css"/>
-        <link rel = "icon" type = "image/gif" href ="Favicon/favicon.gif"/>
-        
+        <link rel = "icon" type = "image/jpg" href ="/Favicon/logo.jpg"/>
     </head>
     <body>
         <nav class = "nav">
@@ -35,11 +34,11 @@
         {{#if msg }}
             {{#if msg.type}}
                 <h4 class = "success">{{msg.text}}</h4>
-                
             {{else}}
-            <h4 class = "error">{{msg.text}}</h4>
+                <h4 class = "error">{{msg.text}}</h4>
             {{/if}}
         {{/if}}
+        <h4 class = "success msg"> <i class = "fa fa-check scs_check"></i>some text <i class = "fa fa-times msg_cut"></i></h4>
         {{{body}}}
         <footer class = "footer">
             <h4>&copy; 2020. Rajarshi Saha</h4>

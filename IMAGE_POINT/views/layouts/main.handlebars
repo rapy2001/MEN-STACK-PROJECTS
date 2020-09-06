@@ -17,7 +17,7 @@
                 <a href = "/user/register">Register</a>
                 <a href = "/leaderboard">Leaderboard</a>
                 {{#if isLoggedIn}}
-                    <a href = "/photos/create">Aadd a Photo</a>
+                    <a href = "/photos/create">Add a Photo</a>
                     <a href = "/user/logout">Logout</a>
                     <a href = "/user/{{crntUser.ID}}/dashboard">Dashboard</a>
                 {{else}}
@@ -33,12 +33,12 @@
         </nav>
         {{#if msg }}
             {{#if msg.type}}
-                <h4 class = "success">{{msg.text}}</h4>
+                <h4 class = "success msg"> <i class = "fa fa-check scs_check"></i> {{msg.text}} <i class = "fa fa-times msg_cut"></i> </h4>
             {{else}}
-                <h4 class = "error">{{msg.text}}</h4>
+                <h4 class = "error msg"> <i class = "fa fa-times err_times"></i> {{msg.text}} <i class = "fa fa-times msg_cut"></i> </h4>
             {{/if}}
         {{/if}}
-        <h4 class = "success msg"> <i class = "fa fa-check scs_check"></i>some text <i class = "fa fa-times msg_cut"></i></h4>
+        {{!-- <h4 class = "error msg"> <i class = "fa fa-times err_times"></i> some text <i class = "fa fa-times msg_cut"></i> </h4> --}}
         {{{body}}}
         <footer class = "footer">
             <h4>&copy; 2020. Rajarshi Saha</h4>

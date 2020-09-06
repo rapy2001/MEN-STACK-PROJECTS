@@ -208,7 +208,7 @@ app.get("/user/logout",(req,res,next) =>{if(req.session.isLoggedIn === true) ret
     req.session.crntUser = {};
     req.session.msg = {
         type:true,
-        msg:"You have logged out successfully"
+        text:"You have logged out successfully"
     }
     res.redirect("back");
 });

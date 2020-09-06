@@ -42,6 +42,7 @@ a{
     flex-direction:column;
     padding:2rem 3rem;
     padding-top:3.5rem;
+    z-index:200;
     transition:.5s all linear;
 }
 .nav_box_2 a{
@@ -182,14 +183,15 @@ a{
 .login form{
     height:42vh;
 }
-.success{
-    border:1px solid red;
+.success,.error{
+    /* border:1px solid red; */
     box-sizing: border-box;
     width:22vw;
     height:8vh;
     padding:1rem 2rem;
     position:fixed;
     right:0px;
+    top:20vh;
     display:flex;
     align-items:center;
     justify-content: space-between;
@@ -198,9 +200,16 @@ a{
     font-size:1.2rem;
     background-color:white;
     color:var(--mainColor);
+    box-shadow:0px 5px 5px rgba(0,0,0,.5);
     transition:.5s all linear;
 }
-.scs_check{
+.success{
+    border-left:4px solid #20CC82;
+}
+.error{
+    border-left:4px solid red;
+}
+.scs_check,.err_times{
     box-sizing: border-box;
     width:2.5rem;
     /* border:1px solid red; */
@@ -211,7 +220,10 @@ a{
     background-color:#20CC82;
     color:white;
     border-radius:50%;
-    margin-right:2rem;
+    /* margin-right:2rem; */
+}
+.err_times{
+    background-color:red;
 }
 .msg_cut{
     /* border:1px solid red; */
@@ -225,4 +237,103 @@ a{
 .hide{
     pointer-events: none;
     right:-23vw;
+}
+.empty{
+    box-sizing: border-box;
+    height:var(--myH);
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.empty h1{
+    font-family:var(--mainFamily);
+    font-weight:100;
+    color:red;
+}
+.photo_create{
+    box-sizing: border-box;
+    height:var(--myH);
+    background:linear-gradient(rgba(0,0,0,.3),rgba(0,0,0,.3)),url("https://static.dribbble.com/users/1090753/screenshots/5813262/fichier_4_2x.png");
+    background-position:center center;
+    background-size:cover;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.photo_create form{
+    height:50vh;
+}
+.all_photos{
+    /* border: 1px solid red; */
+    box-sizing: border-box;
+    padding-top:6rem;
+    padding-bottom:7rem;
+    padding-left:5rem;
+    padding-right:5rem;
+}
+.all_photos h2{
+    font-family:var(--mainFamily);
+    font-weight:100;
+    color:var(--mainColor);
+    text-align: center;
+    font-size:2rem;
+}
+.all_photos_box{
+    border:1.5px solid var(--mainColor);
+    margin-top:4rem;
+    display:flex;
+    justify-content: space-between;
+    padding:4rem 3rem;
+    box-sizing: border-box;
+    min-height:var(--myH);
+    max-height:150vh;
+}
+.photo_card{
+    /* border:1.5px solid var(--mainColor); */
+    box-sizing: border-box;
+    width:12rem;
+    height:45vh;
+    font-family:var(--mainFamily);
+    transform: scale(1);
+    box-shadow: none;
+    overflow:hidden;
+    border-radius: 1rem;
+    transition: .2s all linear;
+}
+.photo_card:hover{
+    cursor: pointer;
+    transform: scale(1.05);
+    box-shadow:0px 0px 5px rgba(0,0,0,.3);
+}
+.photo_card h3, h4{
+    font-weight:100;
+    margin-top:.5rem;
+    text-align: center;
+}
+.photo_card h3{
+    font-size:1.4rem;
+    color:var(--mainColor);
+    text-align: center;
+}
+.photo_card h4 i{
+    color:var(--mainColor);
+}
+.photo_card img{
+    box-sizing: border-box;
+    width:12rem;
+    height:15rem;
+}
+.card_box{
+    /* border:1px solid red; */
+    margin-top:2rem;
+}
+.card_box a{
+    padding:.5rem 2rem;
+    font-size:1rem;
+    display: inline-block;
+    margin-top:1.5rem;
+    margin-bottom: 2rem;
+}
+.card_link{
+    text-align: center;
 }

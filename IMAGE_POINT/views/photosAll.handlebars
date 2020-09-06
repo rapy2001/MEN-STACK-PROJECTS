@@ -1,16 +1,23 @@
-<div>
+<div class = "all_photos">
     {{#if photos.length}}
         <h2>All Photos</h2>
-        {{#each photos}}
-            <div>
-                <img src = "{{url}}" alt = "error"/>
-                <h3>{{title}}</h3>
-                <h4>By {{userDetails.username}}</h4>
-                <a href = "/photo/{{id}}/show">View</a>
-            </div>
-        {{/each}}
+        <div class = "all_photos_box">
+             {{#each photos}}
+                <div class = "photo_card">
+                    <img src = "{{url}}" alt = "error"/>
+                    <div class = "card_box">
+                        <h3>{{title}}</h3>
+                        <h4>By <i>{{userDetails.username}}</i></h4>
+                        <div class  = "card_link"><a href = "/photo/{{id}}/show" class = "btn">View</a></div>
+                    </div>
+                    
+                </div>
+            {{/each}}
+        </div>
+       
     {{else}}
+    <div class = "empty">
         <h1>No Photos Yet ...</h1>
+    </div>
     {{/if}}
-    
 </div>

@@ -58,36 +58,36 @@ app.post("/user/register",function(req,res){
         }
         else
         {
+            console.log(users,req.body.username);
             let flg = 1;
-            for(let i = 0; i<users.length; i++)
-            {
-                if(users[i].username === req.body.username)
+            const newForm = new formidable.IncomingForm();
+            newForm.parse(req,function(err,fields,files){
+                if(err)
                 {
-                    flg = 0;
-                    req.session.msg = {
-                        type:false,
-                        text:"Username already exists. Please enter a different username"
-                    }
-                    res.redirect(303,"/user/register");
-                    break;
+                    console.log("Error while parsing the req");
+                    req.session.msg = messages.serverError;
+                    res.redirect("/user/register");
                 }
-            }
-            if(flg === 1)
-            {
-                // console.log(req.body);
-                const form = new formidable.IncomingForm();
-                form.parse(req,function(err,fields, files){
-                    if(err)
+                else
+                {
+                    for(let i = 0; i<users.length; i++)
                     {
-                        console.log("failed to parse the request object");
-                        req.session.msg = {
-                            type:false,
-                            text:"Username already exists. Please enter a different username"
+                        if(users[i].username === fields.username)
+                        {
+                            flg = 0;
+                            console.log("here")
+                            req.session.msg = {
+                                type:false,
+                                text:"Username already exists. Please enter a different username"
+                            }
+                            res.redirect(303,"/user/register");
+                            break;
                         }
-                        res.redirect(303,"/user/register");
+                        
                     }
-                    else
+                    if(flg === 1)
                     {
+                        // console.log(req.body);
                         bcrypt.hash(fields.password, saltRounds,function(err,hash){
                             if(err)
                             {
@@ -101,7 +101,7 @@ app.post("/user/register",function(req,res){
                                 User.create({
                                     username:fields.username,
                                     password:hash,
-                                    image:"",
+                                    image:false,
                                     description:fields.description,
                                     followers:[],
                                     following:[],
@@ -117,7 +117,7 @@ app.post("/user/register",function(req,res){
                                         let pathname = __dirname + "/public/UPLOADS/" + user.username + val + "." +ary[ary.length - 1];
                                         console.log(files.user_image.name, files.user_image.path);
                                         fs.renameSync(files.user_image.path,pathname);
-                                        user.image = "UPLOADS/" + user.username + val + "." +ary[ary.length - 1];
+                                        user.image = "/UPLOADS/" + user.username + val + "." +ary[ary.length - 1];
                                     }
                                     user.save()
                                     .then(()=>{
@@ -142,9 +142,8 @@ app.post("/user/register",function(req,res){
                             }
                         });
                     }
-                })
-                
-            }
+                }
+            })
         }
     })
     
@@ -922,7 +921,7 @@ app.get("/user/:id/public",function(req,res){
                         id:photo._id,
                         title:photo.title,
                         url:photo.url,
-                        likes:photo.likes,
+                        likes:photo.likes.length,
                         views:photo.views
                     });
                 })
@@ -932,14 +931,16 @@ app.get("/user/:id/public",function(req,res){
                     res.redirect("back");
                 })
             }
-            if(i > user.photos.length)
+            if(i >= user.photos.length)
             {
                 userDetails = {
+                    id:user._id,
                     username:user.username,
                     image:user.image,
                     description:user.description,
                     photos:photos,
-                    totalViews:user.totalViews
+                    totalViews:user.totalViews,
+                    followers:user.followers.length
                 }
                 res.render("userPublic",{data:userDetails})
             }
@@ -948,11 +949,13 @@ app.get("/user/:id/public",function(req,res){
         {
             photos = false;
             userDetails = {
+                id:user._id,
                 username:user.username,
                 image:user.image,
                 description:user.description,
                 photos:photos,
-                totalViews:user.totalViews
+                totalViews:user.totalViews,
+                followers:user.followers.length
             }
             res.render("userPublic",{data:userDetails})
         }

@@ -1,25 +1,50 @@
-<div>
-    <div>
-        <div>
-            <img src = "{{data.image}}" alt = "error" />
+<div class = "public">
+    <div class = "public_box_1">
+        <div class = "pb1_1">
+            {{#if data.image}}
+                <img src = "{{data.image}}" alt = "error" />
+            {{else}}
+                <h4>No Image</h4>
+            {{/if}}
         </div>
-        <div>
-            <h1>{{data.username}}</h1>
-            <h4>Photos {{data.photos}}</h4>
-            <h4>followers:{{data.followers}}</h4>
-            <h4>followers:{{data.totalViews}}</h4>
-            <div>
-                {{#each data.photos}}
-                    <div>
-                        <img src = "{{url}}" alt = "error" />
-                        <h4>title: {{title}}</h4>
-                        <h4>likes: {{likes}}</h4>
-                        <h4>views: {{view}}</h4>
-                        <a href = "/photo/{{id}}/show">View Image</a>
-                    </div>
-                {{/each}}
+        <div class = "pb1_2">
+            <div class = "pb1_2_1">
+                <h1>{{data.username}}</h1>
+                <h4 class = "btn public_btn"><a href = "/user/{{data.id}}/follow">Follow</a></h4>
+            </div>
+            <p>
+                {{data.description}}
+            </p>
+            <div class = "pb1_2_2">
+                <h4><i class = "fa fa-image"></i>{{data.photos.length}}</h4>
+                <h4><i class = "fa fa-male"></i>{{data.followers}}</h4>
+                <h4><i class = "fa fa-eye"></i>{{data.totalViews}}</h4>
             </div>
             
+        </div>
+    </div>
+    <div class = "public_box_2">
+        <h3>Your Photos</h3>
+        <div class = "pb2_box">
+            {{#if data.photos}}
+                {{#each data.photos}}
+                    <div class = "photo_card">
+                        <img src = "{{url}}" alt = "error" />
+                        <div class = "card_box">
+                            <h3>{{title}}</h3>
+                            <h4><i class = "fa fa-heart"></i> {{likes}}</h4>
+                            <h4><i class = "fa fa-eye"></i> {{views}}</h4>
+                            <div class = "card_link">
+                                <a href = "/photo/{{id}}/show" class = "public_btn btn">View Image</a>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}} 
+            {{else}}
+                <div class = "empty">
+                    <h1>No Photos Uploaded ...</h1>
+                </div>
+            {{/if}}   
         </div>
     </div>
 </div>

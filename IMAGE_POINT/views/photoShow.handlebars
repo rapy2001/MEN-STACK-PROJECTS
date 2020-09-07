@@ -13,6 +13,14 @@
             <div class = "image_box">
                 <img src = "{{photo.url}}" alt = "error"/> 
             </div>
+            <div class = "photo_title">
+                <h3>{{photo.title}}</h3>
+                <p>
+                    {{photo.description}} Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Maxime a eaque magni culpa fugit ad exercitationem quod adipisci dignissimos 
+                    atque odio tempora nobis recusandae reprehenderit, eveniet doloribus! Excepturi, quidem eligendi.
+                </p>
+            </div>
             <div class = "photo_lks_vws">
                 <div class = "photo_lks">
                     {{#if photo.like}}
@@ -20,28 +28,28 @@
                     {{else}}
                         <h4 ><i class = "fa fa-heart liked"></i></h4>
                     {{/if}}
-                    <h4>{{photo.likes}}</h4>
+                    <h4 class = "likes">{{photo.likes}}</h4>
                 </div>
-                <h4>views: {{photo.views}}</h4>
+                <h4 class = "views"><i class = "fa fa-eye"></i>{{photo.views}}</h4>
             </div>
-            <h3>{{title}}</h3>
-            <p>
-                {{photo.description}}
-            </p>
+            
         </div>
     </div>
-    <div>
-        <h3>Comments</h3>
-        <a href = "/photo/{{photo.id}}/comment">Add a Comment</a>
+    <div class = "comments_box">
+        <div class = "comment_head">
+            <h3>Comments</h3>
+            <a href = "/photo/{{photo.id}}/comment" class = "btn">Add a Comment</a>
+        </div>
+        
         {{#if photo.comments}}
             {{#each photo.comments}}
-                <div>
+                <div class = "comment">
                     <h4>{{comment}}</h4>
                     <h5>By: {{userDetails.username}}</h5>
                 </div>
             {{/each}}
         {{else}}  
-            <div>
+            <div class = "comment_empty">
                 <h4>No Comments yet ...</h4>
             </div>
         {{/if}}

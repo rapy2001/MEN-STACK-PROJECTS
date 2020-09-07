@@ -476,7 +476,7 @@ app.get("/photo/:id/show",function(req,res){
                                                     id:photo._id,
                                                     title:photo.title,
                                                     url:photo.url,
-                                                    descritpion:photo.description,
+                                                    description:photo.description,
                                                     likes:photo.likes.length,
                                                     views:photo.views,
                                                     userDetails:photo.userDetails,

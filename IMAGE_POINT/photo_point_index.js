@@ -446,7 +446,8 @@ app.get("/photo/:id/show",function(req,res){
                                 }
                             }
                         }
-                        user.totalViews += photo.views;
+                        // user.totalViews += photo.views;
+                        user.totalViews += 1;
                         user.save(function(err){
                             // console.log("may be 2 times");
                             if(err)

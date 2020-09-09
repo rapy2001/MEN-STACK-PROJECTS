@@ -633,3 +633,38 @@ a{
     overflow-y:auto;
     padding:2rem;
 }
+.error_page{
+    /* border:1px solid red; */
+    box-sizing: border-box;
+    height:var(--myH);
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    background:linear-gradient(rgba(0,0,0,.3),rgba(0,0,0,.3)),url("https://static.dribbble.com/users/548267/screenshots/10288685/media/7268be551278859a373ebc661a39daad.jpg");
+    background-position:center center;
+    background-size:cover;
+}
+.error_box{
+    box-sizing: border-box;
+    /* border:1px solid red; */
+    height:40vh;
+    width:40vw;
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items:center;
+    font-family:var(--mainFamily);
+    background-color:white;
+    border-radius:.5rem;
+    
+}
+.error_box h1{
+    font-weight:100;
+    color:red;
+    font-size:2.5rem;
+}
+.error_box a{
+    margin-top:1.5rem;
+    color:var(--mainColor);
+    font-size:1.2rem;
+}

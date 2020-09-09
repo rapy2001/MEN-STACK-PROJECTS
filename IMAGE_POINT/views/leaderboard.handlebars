@@ -1,20 +1,30 @@
-<div>
-    {{#if users}}
-        {{#each users}}
-            <div>
-                <h1>rank: {{rank}} views: {{totalViews}}</h1>
-                <div>
-                    <img src = {{image}} alt = "error"/>
-                    <div>
-                        <h2> <a href = "/user/{{id}}/public">{{username}}</a></h2>
-                        <p>{{description}}</p>
+<div class = "leaderboard">
+    <div class = "leaderboard_box_1">
+        <h1>Photographer Leaderboard</h1>
+        <h3>Users with the most views of photos uploaded</h3>
+    </div>
+    <div class = "leaderboard_box_2">
+        {{#if users}}
+            {{#each users}}
+                <div class = "leaderboard_card">
+                    <div class = "leaderboard_rank">
+                        <h1>{{rank}} </h1>
+                        <h4>{{totalViews}} <span>Views</span></h4>
+                    </div>
+                    
+                    <div class = "lc_box">
+                        <img src = {{image}} alt = "error"/>
+                        <div class = "lc_box_container">
+                            <h2> <a href = "/user/{{id}}/public">{{username}}</a></h2>
+                            <p>{{description}}</p>
+                        </div>
                     </div>
                 </div>
+            {{/each}}
+        {{else}}
+            <div class = "empty">
+                <h1>No Users Yet ....</h1>
             </div>
-        {{/each}}
-    {{else}}
-        <div>
-            <h1>No Users Yet ....</h1>
-        </div>
-    {{/if}}
+        {{/if}}
+    </div>
 </div>
